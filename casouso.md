@@ -1,14 +1,16 @@
-# Caso de Uso - Cadastrar Produto
+# Caso de Uso — Cadastrar Produto (Flowchart)
 
 ```mermaid
-%% Diagrama de Caso de Uso - Cadastrar Produto
-usecaseDiagram
-  actor Funcionario as F
-  actor Empresa as E
+flowchart LR
+  %% Atores
+  F[Funcionario\n<<ator>>]
+  E[Empresa\n<<interessada>>]
 
-  rectangle Sistema {
-    usecase "Cadastrar Produto" as UC1
-  }
+  %% Sistema como contêiner
+  subgraph S[Sistema]
+    UC([Cadastrar Produto])
+  end
 
-  F --> UC1
-  E --> UC1
+  %% Relações
+  F --> UC
+  E --- UC
