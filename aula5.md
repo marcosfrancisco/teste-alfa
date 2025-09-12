@@ -26,7 +26,7 @@ sequenceDiagram
     participant R as Repository
     participant E as Entity
 
-    U->>B: POST /produtos/salvar  body sku-nome-cat-un-preco
+    U->>B: POST /produtos/salvar  body id-nome-cat-un-preco
     B->>C: chamar salvar
     C->>E: criar Produto
     C->>R: salvar Produto
@@ -56,12 +56,12 @@ sequenceDiagram
 
 classDiagram
     class Produto {
-        -String sku
+        -String id
         -String nome
         -String categoria
         -String unidade
         -double preco
-        +Produto(sku,nome,categoria,unidade,preco)
+        +Produto(id,nome,categoria,unidade,preco)
     }
 
     class ProdutoRepositoryMem {
@@ -73,7 +73,7 @@ classDiagram
     class ProdutoControl {
         -ProdutoRepositoryMem repo
         +ProdutoControl(repo)
-        +salvar(sku,nome,categoria,unidade,preco) void
+        +salvar(id,nome,categoria,unidade,preco) void
         +consultar() List
     }
 
@@ -136,13 +136,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 // Define a classe pública ProdutoRepositoryMem (nosso "repositório" em memória)
 public class ProdutoRepositoryMem {
-    // Cria um "banco" em memória: chave é o SKU (String), valor é o Produto
+    // Cria um "banco" em memória: chave é o id (String), valor é o Produto
     private final Map<String, Produto> db = new ConcurrentHashMap<>();
 
     // Método público 'salvar' que recebe um Produto e o guarda no Map
     public void salvar(Produto p) {
-        // Coloca o produto no Map usando o sku como chave (se já existir, substitui)
-        db.put(p.sku, p);
+        // Coloca o produto no Map usando o id como chave (se já existir, substitui)
+        db.put(p.id, p);
     }
 
     // Método público 'consultarTodos' que devolve uma lista com todos os produtos
@@ -158,7 +158,6 @@ public class ProdutoRepositoryMem {
 ## Parte 4 — `ProdutoControl.java` (Control) — **cada linha comentada**
 
 ```java
-// Importa BigDecimal para repassar preço ao criar produto
 import java.math.BigDecimal;
 // Importa List para o retorno da consulta
 import java.util.List;
@@ -175,9 +174,9 @@ public class ProdutoControl {
     }
 
     // Caso de uso "salvar": recebe dados crus, cria um Produto e manda salvar no repositório
-    public void salvar(String sku, String nome, String categoria, String unidade, BigDecimal preco) {
+    public void salvar(String id, String nome, String categoria, String unidade, double preco) {
         // Cria um novo objeto Produto com os dados recebidos
-        Produto p = new Produto(sku, nome, categoria, unidade, preco);
+        Produto p = new Produto(id, nome, categoria, unidade, preco);
         // Chama o repositório para persistir em memória o produto recém-criado
         repo.salvar(p);
     }
@@ -203,8 +202,6 @@ import java.io.*;
 import java.net.InetSocketAddress;
 // Importa StandardCharsets para converter String <-> bytes com UTF-8
 import java.nio.charset.StandardCharsets;
-// Importa BigDecimal para converter o preço recebido (texto) em número preciso
-import java.math.BigDecimal;
 
 // Define a classe pública App que terá o método main (ponto de entrada do programa)
 public class App {
@@ -225,10 +222,10 @@ public class App {
             if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
                 // Lê todos os bytes do corpo da requisição e converte em String usando UTF-8
                 String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-                // Divide a String pelo caractere ';' — esperamos "sku;nome;categoria;unidade;preco"
+                // Divide a String pelo caractere ';' — esperamos "id;nome;categoria;unidade;preco"
                 String[] partes = body.split(";");
-                // Chama o Control para salvar, convertendo o preço (texto) para BigDecimal
-                control.salvar(partes[0], partes[1], partes[2], partes[3], new BigDecimal(partes[4]));
+
+                  control.salvar(partes[0], partes[1], partes[2], partes[3], partes[4]);
                 // Prepara a resposta "ok" como bytes em UTF-8
                 byte[] resp = "ok".getBytes(StandardCharsets.UTF_8);
                 // Envia o status HTTP 201 (Created) e o tamanho do corpo de resposta
@@ -253,7 +250,7 @@ public class App {
                 // Percorre cada produto da lista
                 for (Produto p : lista) {
                     // Monta uma linha com os campos separados por ';' e termina com '\n'
-                    sb.append(p.sku).append(";")
+                    sb.append(p.id).append(";")
                       .append(p.nome).append(";")
                       .append(p.categoria).append(";")
                       .append(p.unidade).append(";")
@@ -274,7 +271,7 @@ public class App {
         // Inicia o servidor HTTP (a partir daqui ele começa a aceitar requisições)
         server.start();
         // Imprime no console as URLs e formatos esperados para facilitar o teste
-        System.out.println("SALVAR:   POST http://localhost:8080/produtos/salvar  (body: sku;nome;categoria;unidade;preco)");
+        System.out.println("SALVAR:   POST http://localhost:8080/produtos/salvar  (body: id;nome;categoria;unidade;preco)");
         System.out.println("CONSULTAR: GET  http://localhost:8080/produtos/consultar");
     }
 }
