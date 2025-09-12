@@ -105,33 +105,23 @@ src/
 ## Parte 2 — `Produto.java` (Entity) — **cada linha comentada**
 
 ```java
-// Define a classe pública Produto (nossa "entidade" do domínio)
 public class Produto {
-    // Campo público 'sku' que identifica unicamente o produto (ex.: "MACA01")
-    public String sku;
-    // Campo público 'nome' para o nome do produto (ex.: "Maçã Gala")
-    public String nome;
-    // Campo público 'categoria' para agrupar produtos (ex.: "FRUTA")
-    public String categoria;
-    // Campo público 'unidade' para indicar a unidade de venda (ex.: "KG" ou "UNIDADE")
-    public String unidade;
-    // Campo público 'preco' que armazena o preço com precisão (BigDecimal)
-    public double preco;
+    private int id;
+    private String nome;
+    private String categoria;
+    private String unidade;
+    private double preco;
 
     // Construtor da classe Produto: recebe todos os campos necessários para criar um produto
-    public Produto(String sku, String nome, String categoria, String unidade, BigDecimal preco) {
-        // Atribui o parâmetro 'sku' ao campo 'sku' deste objeto
-        this.sku = sku;
-        // Atribui o parâmetro 'nome' ao campo 'nome' deste objeto
+    public Produto(int id, String nome, String categoria, String unidade, double preco) {
+        this.id = id;
         this.nome = nome;
-        // Atribui o parâmetro 'categoria' ao campo 'categoria' deste objeto
         this.categoria = categoria;
-        // Atribui o parâmetro 'unidade' ao campo 'unidade' deste objeto
         this.unidade = unidade;
-        // Atribui o parâmetro 'preco' ao campo 'preco' deste objeto
         this.preco = preco;
     }
 }
+
 ```
 
 ---
