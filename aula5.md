@@ -56,11 +56,11 @@ sequenceDiagram
 
 classDiagram
     class Produto {
-        +String sku
-        +String nome
-        +String categoria
-        +String unidade
-        +BigDecimal preco
+        -String sku
+        -String nome
+        -String categoria
+        -String unidade
+        -double preco
         +Produto(sku,nome,categoria,unidade,preco)
     }
 
