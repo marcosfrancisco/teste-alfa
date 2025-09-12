@@ -17,10 +17,77 @@ flowchart LR
     B --> Client
 
 ```
+```mermaid
+
+sequenceDiagram
+    participant U as Cliente
+    participant B as Boundary
+    participant C as Control
+    participant R as Repository
+    participant E as Entity
+
+    U->>B: POST /produtos/salvar  body sku-nome-cat-un-preco
+    B->>C: chamar salvar
+    C->>E: criar Produto
+    C->>R: salvar Produto
+    R-->>C: ok
+    C-->>B: ok
+    B-->>U: resposta 201 ok
 
 
+```
+```mermaid
 
+sequenceDiagram
+    participant U as Cliente
+    participant B as Boundary
+    participant C as Control
+    participant R as Repository
 
+    U->>B: GET /produtos/consultar
+    B->>C: chamar consultar
+    C->>R: consultarTodos
+    R-->>C: lista Produtos
+    C-->>B: devolver lista
+    B-->>U: resposta 200 texto
+
+```
+```mermaid
+
+classDiagram
+    class Produto {
+        +String sku
+        +String nome
+        +String categoria
+        +String unidade
+        +BigDecimal preco
+        +Produto(sku,nome,categoria,unidade,preco)
+    }
+
+    class ProdutoRepositoryMem {
+        -Map db
+        +salvar(p:Produto) void
+        +consultarTodos() List
+    }
+
+    class ProdutoControl {
+        -ProdutoRepositoryMem repo
+        +ProdutoControl(repo)
+        +salvar(sku,nome,categoria,unidade,preco) void
+        +consultar() List
+    }
+
+    class App {
+        +main(args) void
+        ..Boundary HTTP..
+    }
+
+    App --> ProdutoControl : usa
+    ProdutoControl --> Produto : cria
+    ProdutoControl --> ProdutoRepositoryMem : chama
+    ProdutoRepositoryMem --> Produto : armazena
+
+```
 
 
 ## Parte 1 — Estrutura de pastas
