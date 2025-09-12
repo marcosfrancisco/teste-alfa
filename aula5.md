@@ -97,7 +97,7 @@ src/
  ├── App.java                   // Boundary (HTTP) — nossas rotas
  ├── Produto.java               // Entity — dados do produto
  ├── ProdutoRepositoryMem.java  // Repository — “banco” em memória
- └── ProdutoControl.java        // Control — orquestra salvar/consultar
+ └── ProdutoService.java        // Control — orquestra salvar/consultar
 ```
 
 ---
@@ -105,9 +105,6 @@ src/
 ## Parte 2 — `Produto.java` (Entity) — **cada linha comentada**
 
 ```java
-// Importa a classe BigDecimal para representar valores monetários com precisão (melhor que double)
-import java.math.BigDecimal;
-
 // Define a classe pública Produto (nossa "entidade" do domínio)
 public class Produto {
     // Campo público 'sku' que identifica unicamente o produto (ex.: "MACA01")
@@ -119,7 +116,7 @@ public class Produto {
     // Campo público 'unidade' para indicar a unidade de venda (ex.: "KG" ou "UNIDADE")
     public String unidade;
     // Campo público 'preco' que armazena o preço com precisão (BigDecimal)
-    public BigDecimal preco;
+    public double preco;
 
     // Construtor da classe Produto: recebe todos os campos necessários para criar um produto
     public Produto(String sku, String nome, String categoria, String unidade, BigDecimal preco) {
